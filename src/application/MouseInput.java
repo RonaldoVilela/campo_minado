@@ -7,6 +7,7 @@ import java.awt.event.MouseMotionListener;
 
 public class MouseInput implements MouseMotionListener, MouseListener{
 	public boolean clicked = false;
+	public boolean rClicked = false;
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		Program.mouseX = e.getX() / Program.scale;
@@ -28,14 +29,23 @@ public class MouseInput implements MouseMotionListener, MouseListener{
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		clicked = true;
+		if(e.getButton() == MouseEvent.BUTTON1) {
+			clicked = true;
+		}
+		if(e.getButton() == MouseEvent.BUTTON3) {
+			rClicked = true;
+		}
 		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		clicked = false;
-		
+		if(e.getButton() == MouseEvent.BUTTON1) {
+			clicked = false;
+		}
+		if(e.getButton() == MouseEvent.BUTTON3) {
+			rClicked = false;
+		}
 	}
 
 	@Override

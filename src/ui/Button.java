@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import application.GamePanel;
 import application.Program;
 import game_objects.Position;
 
@@ -12,7 +13,7 @@ import game_objects.Position;
 public abstract class Button {
 	
 	Position position = new Position();
-	int widht, height;
+	int width, height;
 	boolean selected;
 	boolean active;
 	public BufferedImage buttonImage;
@@ -80,10 +81,10 @@ public abstract class Button {
 	public void setPosition(float x, float y) {
 		position = new Position(x, y);
 	}
-	public void setSize(int widht, int height) {
-		this.widht = widht;
+	public void setSize(int width, int height) {
+		this.width = width;
 		this.height = height;
-		buttonImage = new BufferedImage(widht, height, BufferedImage.TYPE_INT_ARGB);
+		buttonImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		setContent();
 		
 	}
@@ -96,7 +97,7 @@ public abstract class Button {
 	
 	protected void setContent() {
 		Graphics2D g2 = buttonImage.createGraphics();
-		//g2.setFont(GamePanel.normalLetter);
+		g2.setFont(GamePanel.pixelFont);
 		paintContent(g2);
 		g2.dispose();
 	}
@@ -109,6 +110,7 @@ public abstract class Button {
 			selected = true;
 			if(Program.mouseInput.clicked) {
 				action();
+				Program.mouseInput.clicked = false;
 			}
 		}
 		else {
@@ -122,7 +124,7 @@ public abstract class Button {
 	}
 	
 	private boolean mouseOn() {
-		if(!(position.x < Program.mouseX && position.x + widht > Program.mouseX)){
+		if(!(position.x < Program.mouseX && position.x + width > Program.mouseX)){
 			return false;
 		}
 		if(!(position.y < Program.mouseY && position.y + height > Program.mouseY)){
@@ -147,7 +149,7 @@ public abstract class Button {
 			g.setColor(backgroundColor);
 		}
 		
-		g.fillRect((int)position.x, (int)position.y, widht, height);
+		g.fillRect((int)position.x, (int)position.y, width, height);
 		
 		
 		g.drawImage(buttonImage,(int)position.x ,  (int)position.y, null);
@@ -158,7 +160,7 @@ public abstract class Button {
 			g.setColor(color);
 		}
 		if(!borderless) {
-			g.drawRect((int)position.x, (int)position.y, widht, height);
+			g.drawRect((int)position.x, (int)position.y, width, height);
 		}
 		
 		

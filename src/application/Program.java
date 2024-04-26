@@ -18,13 +18,15 @@ public class Program {
 	public static Scene[] scenes = new Scene[3];
 	public static void main(String[] args) {
 		mouseInput = new MouseInput();
+		panel = new GamePanel();
+		
 		scenes[0] = new Menu();
 		scenes[1] = new Game();
 		
 		window = new JFrame();
-		panel = new GamePanel();
 		
-		window.setTitle("Game");
+		
+		window.setTitle("Campo Minado");
 
 		window.add(panel);
 		

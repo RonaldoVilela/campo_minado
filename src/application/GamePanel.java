@@ -1,15 +1,21 @@
 package application;
 
-import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.swing.JPanel;
 
+import scenes.Game;
 import scenes.Scene;
 
-public class GamePanel extends JPanel implements Runnable{
+public class GamePanel extends JPanel{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -17,6 +23,8 @@ public class GamePanel extends JPanel implements Runnable{
 	final int scale = 2;
 	final static int FPS = 60;
 	Thread gameThread;
+	public static Font pixelFont;
+	public long timerMills = 0;
 	
 	public static Scene scene = null;
 	
@@ -28,16 +36,31 @@ public class GamePanel extends JPanel implements Runnable{
 		addMouseListener(Program.mouseInput);
 		//setVisible(true);
 		setFocusable(true);
-		scene = Program.scenes[0];
+		
+		File file = new File("res/fonts/DePixelHalbfett.ttf");
+		
+		try {
+			InputStream is = new FileInputStream(file);
+			pixelFont = Font.createFont(Font.TRUETYPE_FONT, is);
+			pixelFont = pixelFont.deriveFont(Font.PLAIN, 9);
+			
+		} catch (FontFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		
 	}
 	
 	public static void changeScene(int sceneIndex) {
 		scene = Program.scenes[sceneIndex];
+		scene.start();
 	}
 	
 	public void startGame() {
-		gameThread = new Thread(this);
+		changeScene(0);
+		gameThread = new Thread(this::run);
 		gameThread.start();
 	}
 	
@@ -48,8 +71,7 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	
 	public void render(Graphics g) {
-		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0, 0, 400, 320);
+		
 		if(scene != null) {
 			scene.render(g);
 		}
@@ -58,13 +80,14 @@ public class GamePanel extends JPanel implements Runnable{
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics g2 = gameImage.createGraphics();
+		g2.setFont(pixelFont);
 		render(g2);
 		g2.dispose();
 		
 		g.drawImage(gameImage, 0, 0, gameImage.getWidth()* Program.scale, gameImage.getHeight()* Program.scale, null);
 	}
 
-	@Override
+	
 	public void run() {
 
 		long millsPerFrame = 1000/FPS;
@@ -80,6 +103,14 @@ public class GamePanel extends JPanel implements Runnable{
 					Thread.sleep(millsPerFrame - totalTime);
 				} catch (Exception e) {
 					e.printStackTrace();
+				}
+			}
+			
+			if(Game.started && Game.state != Game.DEAD) {
+				timerMills += (System.nanoTime() - startTime)/1000000;
+				if(timerMills >= 1000) {
+					Game.passSecond();
+					timerMills -= 1000;
 				}
 			}
 			
