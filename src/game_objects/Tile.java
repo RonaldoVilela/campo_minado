@@ -12,12 +12,13 @@ public class Tile {
 	boolean bomb = false;
 	boolean selected = false;
 	boolean digged = false;
-	public int number = 0;
+	public int number = 1;
 	public int width, height;
 	boolean flagged = false;
 	Color defaultColor, diggedColor;
 	Color numberColor = Color.BLACK;
 	int mapX = 0, mapY = 0;
+	int offSet = 0;
 	public static BufferedImage flagImage;
 	public static BufferedImage bombImage;
 	
@@ -30,8 +31,7 @@ public class Tile {
 			diggedColor = new Color(247, 202, 145);
 		}
 		
-		width = 12;
-		height = 12;
+		setSize(12);
 	}
 	
 	public void setMapPosition(int x, int y) {
@@ -46,6 +46,7 @@ public class Tile {
 	public void setSize(int size) {
 		width = size;
 		height = size;
+		offSet = (size - 12)/2;
 	}
 	
 	public boolean isBomb() {
@@ -61,6 +62,7 @@ public class Tile {
 	}
 	
 	public void checkNumber(Tile[][] tiles) {
+		number = 0;
 		if(bomb) {
 			return;
 		}
@@ -197,12 +199,12 @@ public class Tile {
 				
 			}
 		}
-		g.fillRect((int)position.x, (int)position.y, width, height);
+		g.fillRect(position.x, position.y, width, height);
 		
 		if(flagged) {
 			//g.setColor(Color.RED);
 			//g.fillRect((int)position.x + 2, (int)position.y + 2, width - 4, height - 4);
-			g.drawImage(flagImage, (int)position.x + 1, (int)position.y, null);
+			g.drawImage(flagImage, position.x + 1 + offSet, position.y + offSet, null);
 			
 		}
 		
@@ -210,11 +212,11 @@ public class Tile {
 			return;
 		}
 		if(bomb) {
-			g.drawImage(bombImage, (int)position.x, (int)position.y, null);
+			g.drawImage(bombImage, position.x + offSet, position.y + offSet, null);
 		}
 		g.setColor(numberColor);
 		if(!bomb && number != 0) {
-			g.drawString(""+number, (int)position.x + 3, (int)position.y + 11);
+			g.drawString(""+number, position.x + 3 + offSet, position.y + 11 + offSet);
 		}
 	}
 }

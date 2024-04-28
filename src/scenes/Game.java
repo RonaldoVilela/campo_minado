@@ -24,6 +24,7 @@ public class Game implements Scene{
 	public static int maxSeconds = 999;
 	public static int seconds = 999;
 	public static boolean started = false;
+	static boolean loaded = false;
 	Color backGroundColor = new Color(21,76,24);
 	Color redish = new Color(255,0,0,170);
 	
@@ -110,6 +111,7 @@ public class Game implements Scene{
 	public void start() {
 		setState(FINE);
 		loadTiles();
+		loaded = false;
 		seconds = maxSeconds;
 		started = false;
 	}
@@ -151,13 +153,20 @@ public class Game implements Scene{
 		}
 		
 		
+		
+	}
+	
+	static void loadBombs(int tx, int ty) {
+		if(loaded) {
+			return;
+		}
 		int bombs = 0;
 		Random rand = new Random();
 		
 		while(bombs < flags) {
 			int x = rand.nextInt(tiles.length);
 			int y = rand.nextInt(tiles[0].length);
-			if(!tiles[x][y].isBomb()) {
+			if(x != tx && y != ty && !tiles[x][y].isBomb()) {
 				tiles[x][y].setBomb(true);
 				bombs++;
 			}
@@ -170,6 +179,8 @@ public class Game implements Scene{
 				tiles[i][j].checkNumber(tiles);;
 			}
 		}
+		
+		loaded = true;
 	}
 	
 	public static boolean checkFlags() {
@@ -184,13 +195,31 @@ public class Game implements Scene{
 		
 		return true;
 	}
+	public static void checkDigged() {
+		
+		for(int i = 0; i <tiles.length; i++) {
+			for(int j = 0; j < tiles[0].length; j++) {
+				if(!tiles[i][j].isBomb() && !tiles[i][j].isDigged()) {
+					return;
+				}
+			}
+		}
+		
+		setState(VICTORY);
+	}
 	
 	public static void setState(int state) {
 		Game.state = state;
 	}
 	
 	public static void passSecond() {
+		
 		if(!started) {
+			return;
+		}
+		
+		seconds--;
+		if(state == VICTORY) {
 			return;
 		}
 		if(seconds <= 0) {
@@ -203,7 +232,6 @@ public class Game implements Scene{
 			setState(DEAD);
 			return;
 		}
-		seconds--;
 		if(seconds <= 20) {
 			setState(HURRY);
 		}
@@ -222,20 +250,23 @@ public class Game implements Scene{
 		if(seconds > maxSeconds) {
 			seconds = maxSeconds;
 		}
+		checkDigged();
 	}
 	@Override
 	public void update() {
-		faceButton.checkClick();
-		if(state != DEAD) {
+		
+		if(state != DEAD && state != VICTORY) {
 			for(int i = 0; i <tiles.length; i++) {
 				for(int j = 0; j < tiles[0].length; j++) {
 					tiles[i][j].update();
 				}
 			}
+			faceButton.checkClick();
 		}else {
 			for(int i = 0; i < buttons.length; i++) {
 				buttons[i].checkClick();
 			}
+			
 		}
 		
 		Program.mouseInput.clicked = false;
@@ -243,6 +274,7 @@ public class Game implements Scene{
 	}
 	
 	public static void dig(int x, int y) {
+		
 		if(x < tiles.length - 1 && !tiles[x + 1][y].isBomb()) {
 			Tile tile = tiles[x+1][y];
 			if(tile.number == 0) {
@@ -278,6 +310,14 @@ public class Game implements Scene{
 		}
 		
 		if(!started) {
+			loadBombs(x, y);
+			//addTime(0);
+			
+			if(tiles[x][y].number == 0) {
+				dig();
+				return;
+			}
+			
 			if(x < tiles.length - 1 && !tiles[x + 1][y].isBomb()) {
 				Tile tile = tiles[x+1][y];
 				if(tile.number != 0) {
@@ -374,18 +414,23 @@ public class Game implements Scene{
 		if(state == DEAD) {
 			g.setColor(redish);
 			g.fillRect(0, 50, 400, 270);
-			for(int i = 0; i < buttons.length; i++) {
-				buttons[i].render(g);
-			}
-		}else {
+			
+		}else if(state != VICTORY){
 			g.setColor(Color.WHITE);
-			g.drawString("Bandeiras: "+flags, 20, 30);
+			g.drawString("Bandeiras: "+ flags, 20, 30);
 			if(state == HURRY) {
 				g.setColor(Color.RED);
 			}
-			g.drawString("Tempo: "+seconds, 260, 30);
+			g.drawString("Tempo: "+String.format("%03d", seconds), 260, 30);
+			faceButton.render(g);
+			g.drawImage(face[state], 183,7,null);
+			return;
 		}
-		faceButton.render(g);
+		
+		for(int i = 0; i < buttons.length; i++) {
+			buttons[i].render(g);
+		}
+		
 		g.drawImage(face[state], 183,7,null);
 		
 	}

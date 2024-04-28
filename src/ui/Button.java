@@ -25,10 +25,10 @@ public abstract class Button {
 	private Color selectedColor = Color.DARK_GRAY;
 	private Color unfocusColor = Color.GRAY;
 	
-	public Button(float x, float y) {
+	public Button(int x, int y) {
 		setPosition(x, y);
 	}
-	public Button(float x, float y, int widht, int height) {
+	public Button(int x, int y, int widht, int height) {
 		setPosition(x, y);
 		setSize(widht, height);
 	}
@@ -78,7 +78,7 @@ public abstract class Button {
 		return focused;
 	}
 	
-	public void setPosition(float x, float y) {
+	public void setPosition(int x, int y) {
 		position = new Position(x, y);
 	}
 	public void setSize(int width, int height) {
@@ -149,10 +149,10 @@ public abstract class Button {
 			g.setColor(backgroundColor);
 		}
 		
-		g.fillRect((int)position.x, (int)position.y, width, height);
+		g.fillRect(position.x, position.y, width, height);
 		
 		
-		g.drawImage(buttonImage,(int)position.x ,  (int)position.y, null);
+		g.drawImage(buttonImage,position.x , position.y, null);
 		if(focusable && !focused) {
 			g.setColor(unfocusColor);
 		}
@@ -160,7 +160,7 @@ public abstract class Button {
 			g.setColor(color);
 		}
 		if(!borderless) {
-			g.drawRect((int)position.x, (int)position.y, width, height);
+			g.drawRect(position.x, position.y, width, height);
 		}
 		
 		

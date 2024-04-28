@@ -106,7 +106,7 @@ public class GamePanel extends JPanel{
 				}
 			}
 			
-			if(Game.started && Game.state != Game.DEAD) {
+			if(Game.started && Game.state != Game.DEAD && Game.state != Game.VICTORY) {
 				timerMills += (System.nanoTime() - startTime)/1000000;
 				if(timerMills >= 1000) {
 					Game.passSecond();
