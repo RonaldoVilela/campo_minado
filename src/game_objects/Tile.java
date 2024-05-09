@@ -21,6 +21,7 @@ public class Tile {
 	int offSet = 0;
 	public static BufferedImage flagImage;
 	public static BufferedImage bombImage;
+	public static BufferedImage flowerImage;
 	
 	public Tile(boolean isDarker) {
 		if(isDarker) {
@@ -55,6 +56,9 @@ public class Tile {
 	
 	public boolean isDigged() {
 		return digged;
+	}
+	public void setDigged(boolean value) {
+		digged = value;
 	}
 	
 	public boolean isFlagged() {
@@ -190,6 +194,7 @@ public class Tile {
 	public void render(Graphics g) {
 		if(digged) {
 			g.setColor(diggedColor);
+			
 		}else {
 			if(selected && Game.state != Game.DEAD) {
 				g.setColor(Color.WHITE);
@@ -197,26 +202,37 @@ public class Tile {
 			}else {
 				g.setColor(defaultColor);
 				
+				if(Game.state == Game.VICTORY) {
+					g.fillRect(position.x, position.y, width, height);
+					g.setColor(numberColor);
+					if(!bomb && number != 0) {
+						g.drawString(""+number, position.x + 3 + offSet, position.y + 11 + offSet);
+					}
+					g.drawImage(flowerImage, position.x + offSet, position.y + offSet, null);
+					return;
+				}
 			}
-		}
-		g.fillRect(position.x, position.y, width, height);
-		
-		if(flagged) {
-			//g.setColor(Color.RED);
-			//g.fillRect((int)position.x + 2, (int)position.y + 2, width - 4, height - 4);
-			g.drawImage(flagImage, position.x + 1 + offSet, position.y + offSet, null);
+			
 			
 		}
 		
+		g.fillRect(position.x, position.y, width, height);
+		
 		if(!digged) {
+			if(flagged) {
+				g.drawImage(flagImage, position.x + 1 + offSet, position.y + offSet, null);
+			}
 			return;
+			
 		}
 		if(bomb) {
 			g.drawImage(bombImage, position.x + offSet, position.y + offSet, null);
 		}
+		
 		g.setColor(numberColor);
 		if(!bomb && number != 0) {
 			g.drawString(""+number, position.x + 3 + offSet, position.y + 11 + offSet);
 		}
+		
 	}
 }

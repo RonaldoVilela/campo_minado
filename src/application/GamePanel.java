@@ -20,7 +20,6 @@ public class GamePanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
 	BufferedImage gameImage = new BufferedImage(400, 320, BufferedImage.TYPE_INT_RGB);
-	final int scale = 2;
 	final static int FPS = 60;
 	Thread gameThread;
 	public static Font pixelFont;

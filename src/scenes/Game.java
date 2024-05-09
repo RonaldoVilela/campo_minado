@@ -60,6 +60,12 @@ public class Game implements Scene{
 			g.dispose();
 			Tile.flagImage = sprite;
 			
+			sprite = new BufferedImage(12, 12, BufferedImage.TYPE_INT_ARGB);
+			g = sprite.createGraphics();
+			g.drawImage(spriteSheet, -49, -35, null);
+			g.dispose();
+			Tile.flowerImage = sprite;
+			
 			g.dispose();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -83,7 +89,7 @@ public class Game implements Scene{
 			@Override
 			protected void paintContent(Graphics g) {
 				g.setColor(Color.WHITE);
-				g.drawString("Tentar Novamente", 10, 18);
+				g.drawString("Jogar novamente", 10, 18);
 			}
 			
 			@Override
@@ -182,6 +188,15 @@ public class Game implements Scene{
 		
 		loaded = true;
 	}
+	static void revealBombs() {
+		for(int i = 0; i <tiles.length; i++) {
+			for(int j = 0; j < tiles[0].length; j++) {
+				if(tiles[i][j].isBomb()) {
+					tiles[i][j].setDigged(true);
+				}
+			}
+		}
+	}
 	
 	public static boolean checkFlags() {
 		
@@ -210,6 +225,10 @@ public class Game implements Scene{
 	
 	public static void setState(int state) {
 		Game.state = state;
+		if(state == Game.DEAD) {
+			revealBombs();
+			return;
+		}
 	}
 	
 	public static void passSecond() {
@@ -421,7 +440,7 @@ public class Game implements Scene{
 			if(state == HURRY) {
 				g.setColor(Color.RED);
 			}
-			g.drawString("Tempo: "+String.format("%03d", seconds), 260, 30);
+			g.drawString("Tempo: "+String.format("%03d", seconds), 305, 30);
 			faceButton.render(g);
 			g.drawImage(face[state], 183,7,null);
 			return;
