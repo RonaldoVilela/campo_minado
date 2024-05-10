@@ -3,10 +3,8 @@ package scenes;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageInputStream;
 
 import application.GamePanel;
 import application.Program;
@@ -39,9 +37,8 @@ public class Tutorial implements Scene{
 			}
 		};
 		tutoImages = new BufferedImage[3];
-		File file = new File("res/images/sprites.png");
 		try {
-			BufferedImage spriteSheet = ImageIO.read(new FileImageInputStream(file));
+			BufferedImage spriteSheet = ImageIO.read(getClass().getResourceAsStream("/images/sprites.png"));
 			for(int i = 0; i < tutoImages.length; i++) {
 				BufferedImage sprite = new BufferedImage(35, 32, BufferedImage.TYPE_INT_ARGB);
 				Graphics g = sprite.createGraphics();
@@ -56,7 +53,6 @@ public class Tutorial implements Scene{
 	}
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
 		
 	}
 

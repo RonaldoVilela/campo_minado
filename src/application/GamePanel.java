@@ -5,8 +5,6 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -36,10 +34,9 @@ public class GamePanel extends JPanel{
 		//setVisible(true);
 		setFocusable(true);
 		
-		File file = new File("res/fonts/DePixelHalbfett.ttf");
 		
 		try {
-			InputStream is = new FileInputStream(file);
+			InputStream is = getClass().getResourceAsStream("/fonts/DePixelHalbfett.ttf");
 			pixelFont = Font.createFont(Font.TRUETYPE_FONT, is);
 			pixelFont = pixelFont.deriveFont(Font.PLAIN, 9);
 			

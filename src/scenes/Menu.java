@@ -3,10 +3,8 @@ package scenes;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageInputStream;
 
 import application.GamePanel;
 import application.Program;
@@ -21,7 +19,7 @@ public class Menu implements Scene{
 		
 		try {
 
-			BufferedImage spriteSheet = ImageIO.read(new FileImageInputStream(new File("res/images/sprites.png")));
+			BufferedImage spriteSheet = ImageIO.read(getClass().getResourceAsStream("/images/sprites.png"));
 			for(int i = 0; i < face.length; i++) {
 				BufferedImage sprite = new BufferedImage(33, 34, BufferedImage.TYPE_INT_ARGB);
 				Graphics g = sprite.createGraphics();
@@ -31,7 +29,7 @@ public class Menu implements Scene{
 			}
 			
 			
-			backGround = ImageIO.read(new FileImageInputStream(new File("res/images/bg.png")));;
+			backGround = ImageIO.read(getClass().getResourceAsStream("/images/bg.png"));
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

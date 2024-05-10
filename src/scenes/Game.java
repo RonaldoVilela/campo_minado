@@ -3,11 +3,9 @@ package scenes;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageInputStream;
 
 import application.GamePanel;
 import application.Program;
@@ -37,9 +35,8 @@ public class Game implements Scene{
 	
 	public Game() {
 		face = new BufferedImage[4];
-		File file = new File("res/images/sprites.png");
 		try {
-			BufferedImage spriteSheet = ImageIO.read(new FileImageInputStream(file));
+			BufferedImage spriteSheet = ImageIO.read(getClass().getResourceAsStream("/images/sprites.png"));
 			for(int i = 0; i < face.length; i++) {
 				BufferedImage sprite = new BufferedImage(35, 35, BufferedImage.TYPE_INT_ARGB);
 				Graphics g = sprite.createGraphics();
